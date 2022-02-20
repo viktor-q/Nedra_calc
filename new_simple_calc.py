@@ -3,7 +3,7 @@ def calculation_from_string(input_string):
     second = ""
     operator = ""
 
-    nums = "0123456789"
+    nums = "0123456789."
     operators = "+-/*"
 
     op = {
@@ -13,20 +13,31 @@ def calculation_from_string(input_string):
         "/": lambda x, y: x / y,
     }
 
+
+
+
     for element in input_string:
-        if (element in nums) and (first == ""):
+        if (first == "") and (element in "+-0123456789"):  # make first
             first += element
-        elif element in operators:
+        elif (first == "") and (element not in "+-01234567890"):
+            return f'fuck, bad start symbol'
+
+        elif (element in nums) and (operator == ""):
+            first += element
+        elif (element in operators) and (operator == ""):
             operator += element
-        elif (element in nums) and (first != ""):
+        elif (element in nums) and (operator != ""):
             second += element
+        elif (element in operators) and (operator != ""):
             first = op[operator](float(first), float(second))
             second = ""
-            operator = ""
+            operator = element
 
-    return first
+    first = op[operator](float(first), float(second)) #make_end
+
+    return first, second, operator
 
 
-x = "5+3-2" # =6
+x = "5.55+5.45*2"  # =12
 print(calculation_from_string(x))
 
