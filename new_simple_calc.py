@@ -31,11 +31,28 @@ def calculation_from_string(input_string):
             second = ""
             operator = element
 
-    first = op[operator](float(first), float(second)) #make_end
+    if (operator == "") and (second == ""):
+        return first
+    else:
+        first = op[operator](float(first), float(second)) #make_end
 
-    return first, second, operator
+    return first
 
 
-x = "5.55++5.45*2"  # =12
+x = '3 +(2-1)+3*2'  # =14
+##x = "3+2-6.5"  # = -1.5
+
+##x = "+100.1" #→ 100.1
+##x = "-0" #→ 0
+##x = "-7 / 34.2"  # → -0.205   СДЕЛАТЬ ОКРУГЛЕНИЕ
+##x = "- 6 * 2" #→ -11.98
+##x = "2. / 1." #→ 2
+
+##x = "5 + - 4" #→ ошибка
+##x = "*1 + 7" #→ ошибка
+
+# MY TESTS
+# x = "8+ (2)*3"   #30
+# x = "8+2(3)"  #ошибка #Попробовать тоже перехватить
 print(calculation_from_string(x))
 
