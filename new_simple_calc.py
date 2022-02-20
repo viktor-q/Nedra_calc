@@ -14,13 +14,11 @@ def calculation_from_string(input_string):
     }
 
 
-
-
     for element in input_string:
         if (first == "") and (element in "+-0123456789"):  # make first
             first += element
         elif (first == "") and (element not in "+-01234567890"):
-            return f'fuck, bad start symbol'
+            return f'custom EX: bad first symbol'
 
         elif (element in nums) and (operator == ""):
             first += element
@@ -38,6 +36,6 @@ def calculation_from_string(input_string):
     return first, second, operator
 
 
-x = "5.55+5.45*2"  # =12
+x = "5.55++5.45*2"  # =12
 print(calculation_from_string(x))
 
