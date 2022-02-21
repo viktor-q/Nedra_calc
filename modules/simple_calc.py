@@ -3,7 +3,7 @@ from modules.round_upper import round_up
 
 class SimpleCalculator:
     @round_up
-    def calculation_from_string(self, input_string: str):
+    def calculation_from_string(self, input_string: str) -> str:
         first = ""
         second = ""
         operator = ""
@@ -18,28 +18,36 @@ class SimpleCalculator:
             "/": lambda x, y: x / y,
         }
 
+        try:
+            for element in input_string:
+                if (first == "") and (element in "+-0123456789"):  # make first
+                    first += element
+                elif (first == "") and (element not in "+-01234567890"):
+                    return "error"  # mb custom exp?
 
-        for element in input_string:
-            if (first == "") and (element in "+-0123456789"):  # make first
-                first += element
-            elif (first == "") and (element not in "+-01234567890"):
-                return f'custom EX: bad first symbol'
 
-            elif (element in nums) and (operator == ""):
-                first += element
-            elif (element in operators) and (operator == ""):
-                operator += element
-            elif (element in nums) and (operator != ""):
-                second += element
-            elif (element in operators) and (operator != ""):
+                elif (element in nums) and (operator == ""):
+                    first += element
+                elif (element in operators) and (operator == ""):
+                    operator += element
+                elif (element in nums) and (operator != ""):
+                    second += element
+                elif (element in operators) and (operator != ""):
+                    first = op[operator](float(first), float(second))
+                    second = ""
+                    operator = element
+
+
+            if (operator == "") and (second == ""):  # make end
+                if first[0] == "+":
+                    return first[1:]
+                else:
+                    return first
+            else:
                 first = op[operator](float(first), float(second))
-                second = ""
-                operator = element
 
-        if (operator == "") and (second == ""):  # make end
             return first
-        else:
-            first = op[operator](float(first), float(second))
 
-        return first
+        except:
+            return "error"
 

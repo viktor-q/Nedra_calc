@@ -29,5 +29,5 @@ from modules.logger import Logger
 newclass = Logger()
 
 #newclass.add_log_to_json("5+5", "10")
-result = newclass.read_log_from_json(None, "success")
+result = newclass.read_log_from_json(2, None)
 print(result)

@@ -1,12 +1,12 @@
 import json
-from typing import Optional
+
 
 class Logger:
     def add_log_to_json(self, request, response):
-        if response != "":
+        if response != "error":
             data_to_add = {"request": request, "response": response, "status": "success"}
         else:
-            data_to_add = {"request": request, "response": "", "status": "fail"}
+            data_to_add = {"request": request, "response": "error", "status": "fail"}
 
         with open('logs.json') as json_file:
             data_from_file = json_file.read().strip()
