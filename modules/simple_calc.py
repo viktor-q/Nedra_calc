@@ -25,7 +25,6 @@ class SimpleCalculator:
                 elif (first == "") and (element not in "+-01234567890"):
                     return "error"  # mb custom exp?
 
-
                 elif (element in nums) and (operator == ""):
                     first += element
                 elif (element in operators) and (operator == ""):
@@ -36,7 +35,6 @@ class SimpleCalculator:
                     first = op[operator](float(first), float(second))
                     second = ""
                     operator = element
-
 
             if (operator == "") and (second == ""):  # make end
                 if first[0] == "+":
@@ -50,4 +48,3 @@ class SimpleCalculator:
 
         except:
             return "error"
-

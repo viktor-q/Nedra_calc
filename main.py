@@ -1,11 +1,12 @@
-import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field
 from typing import Optional
 
-import modules.simple_calc
-import modules.logger
+import uvicorn
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import UJSONResponse
+from pydantic import BaseModel, Field
 
+import modules.logger
+import modules.simple_calc
 
 app = FastAPI()
 
@@ -42,22 +43,21 @@ class HistoryRequestDTO(BaseModel):
     class Config:
         schema_extra = {"example": {"limit": 5, "status": "fail"}}
 
+
 class HistoryResponseDTO(BaseModel):
+    output_data: list
 
-    request: str
-    # response: str
-    # status: str
-
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
     #     schema_extra = {"example": {"output_data": {"request": "0.01 - 6 * 2", "response": "-11.980", "status": "success"}}}
+
 
 @app.post("/history", response_model=HistoryResponseDTO)
 async def history(pushed_data: HistoryRequestDTO):
 
     logs = modules.logger.Logger()
     result_logs = logs.read_log_from_json(pushed_data.limit, pushed_data.status)
-    return result_logs
+    return {"output_data": result_logs}
 
 
 if __name__ == "__main__":
