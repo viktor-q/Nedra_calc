@@ -1,50 +1,45 @@
-import re
-
 from modules.round_upper import round_up
 
 
 class SimpleCalculator:
     @round_up
-    def arithmetic(self, string_with_formula: str) -> float:
-        operators = re.findall(r"[/,*,+,-]+", string_with_formula)  # [operators]
-        nums = re.findall(r"([\d.]*\d+)", string_with_formula)  # [operands]
-        starts = ("+", "-")
+    def calculation_from_string(self, input_string: str):
+        first = ""
+        second = ""
+        operator = ""
 
-        if len(nums) == len(operators):
-            if string_with_formula[0].isdigit():
-                return f"ggggg"
-            elif operators[0] in starts:
-                nums[0] = str(operators[0]) + str(nums[0])
-                operators = operators[1:]
-            elif operators[0] not in starts:
-                return f"fffff"  # выбрать, как кидать исключения Exception('ошибка')
+        nums = "0123456789."
+        operators = "+-/*"
 
-        index_num = 0
-        index_num2 = 1
-        result = float(nums[0])
+        op = {
+            "+": lambda x, y: x + y,
+            "-": lambda x, y: x - y,
+            "*": lambda x, y: x * y,
+            "/": lambda x, y: x / y,
+        }
 
-        try:
-            if len(nums) == 1:
-                if nums[0][0] == "+" or nums[0][1] == "0":
-                    return nums[0][1:]
-                if nums[0][0] == "-":
-                    return nums[0]
 
-            for t in range(len(operators)):
-                op = {
-                    "+": lambda x, y: x + y,
-                    "-": lambda x, y: x - y,
-                    "*": lambda x, y: x * y,
-                    "/": lambda x, y: x / y,
-                }
+        for element in input_string:
+            if (first == "") and (element in "+-0123456789"):  # make first
+                first += element
+            elif (first == "") and (element not in "+-01234567890"):
+                return f'custom EX: bad first symbol'
 
-                num2 = float(nums[index_num2])
-                num_operator = operators[index_num]
-                result = op[num_operator](result, num2)
+            elif (element in nums) and (operator == ""):
+                first += element
+            elif (element in operators) and (operator == ""):
+                operator += element
+            elif (element in nums) and (operator != ""):
+                second += element
+            elif (element in operators) and (operator != ""):
+                first = op[operator](float(first), float(second))
+                second = ""
+                operator = element
 
-                index_num += 1
-                index_num2 += 1
+        if (operator == "") and (second == ""):  # make end
+            return first
+        else:
+            first = op[operator](float(first), float(second))
 
-            return result
-        except KeyError:
-            return "неизвестная операция"
+        return first
+

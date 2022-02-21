@@ -5,7 +5,10 @@ def round_up(foo_roundup_result):
             before_dot = str(number_for_round).split(".")[0]
             after_dot = str(number_for_round).split(".")[1]
             if len(after_dot) <= 3:
-                return number_for_round
+                if after_dot == "0":
+                    return before_dot
+                else:
+                    return number_for_round
             else:
                 if int(after_dot[3]) >= 5:
                     result_after_dot = int(after_dot[:3]) + 1
