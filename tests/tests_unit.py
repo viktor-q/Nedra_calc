@@ -50,30 +50,15 @@ def test_ignore_parenthesis_in_formula():
     result = testfoo.calculation_from_string(x)
     assert result == "30"
 
-# x = '3 +(2-1)+3*2'  # =14
-# x = "3+2-6.5"  # = -1.5
+def test_long_formula():
+    x = "3+2-6.5"  # -1.5
+    testfoo = SimpleCalculator()
+    result = testfoo.calculation_from_string(x)
+    assert result == "-1.5"
 
 
-
-
-
-#x = "2. / 1." #→ 2
-
-
-
-
-# MY TESTS
-# x = "8+ (2)*3"   #30
-# x = "8+2(3)"  #ошибка #Попробовать тоже перехватить
-
-
-# testfoo = SimpleCalculator()
-#
-# print(testfoo.calculation_from_string(x))
-
-
-
-# newclass = Logger()
+# from modules import logger
+# newclass = logger.Logger()
 #
 # # newclass.add_log_to_json("5+5", "10")
 # result = newclass.read_log_from_json(2, None)

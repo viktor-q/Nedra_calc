@@ -5,7 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import UJSONResponse
 from pydantic import BaseModel, Field
 
-import modules.logger
+import modules.storage
 import modules.simple_calc
 
 app = FastAPI()
@@ -30,7 +30,7 @@ async def calculation(pushed_data: CalcRequestDTO):
     calculator = modules.simple_calc.SimpleCalculator()
     result = calculator.calculation_from_string(pushed_data.input_data)
 
-    logger = modules.logger.Logger()
+    logger = modules.storage.StorageInJson()
     logger.add_log_to_json(pushed_data.input_data, result)
 
     return {"output_data": result}
@@ -55,7 +55,7 @@ class HistoryResponseDTO(BaseModel):
 @app.post("/history", response_model=HistoryResponseDTO)
 async def history(pushed_data: HistoryRequestDTO):
 
-    logs = modules.logger.Logger()
+    logs = modules.storage.StorageInJson()
     result_logs = logs.read_log_from_json(pushed_data.limit, pushed_data.status)
     return {"output_data": result_logs}
 

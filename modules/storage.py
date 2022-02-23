@@ -1,7 +1,7 @@
 import json
 
 
-class Logger:
+class StorageInJson:
     def add_log_to_json(self, request, response):
         if response != "error":
             data_to_add = {"request": request, "response": response, "status": "success"}
