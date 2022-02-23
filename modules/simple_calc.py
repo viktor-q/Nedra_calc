@@ -32,7 +32,7 @@ class SimpleCalculator:
                 if (first == "") and (element in "+-0123456789"):  # make first
                     first += element
                 elif (first == "") and (element not in "+-01234567890"):
-                    raise NotValidFirstSymbol  #custom exp
+                    raise NotValidFirstSymbol  # custom exp
 
                 elif (element in nums) and (operator == ""):
                     first += element
@@ -49,20 +49,21 @@ class SimpleCalculator:
                         raise NotValidOperators
 
             if (operator == "") and (second == ""):  # make end
-                if first[0] == "+":
+                if (first[0] == "+") or (first == "-0"):
                     return first[1:]
                 else:
                     return first
             else:
                 first = op[operator](float(first), float(second))
 
-
-
             return first
 
         except NotValidFirstSymbol:
-            return "error 1"
+            return "error"
         except NotValidOperators:
-            return "error 2"
+            return "error"
         except Exception:
-            return "error 3"
+            return "error"
+
+
+
