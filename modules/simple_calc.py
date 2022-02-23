@@ -1,5 +1,14 @@
 from modules.round_upper import round_up
 
+class Error(Exception):
+    pass
+
+class NotValidFirstSymbol(Error):
+    pass
+
+class NotValidOperators(Error):
+    pass
+
 
 class SimpleCalculator:
     @round_up
@@ -23,7 +32,7 @@ class SimpleCalculator:
                 if (first == "") and (element in "+-0123456789"):  # make first
                     first += element
                 elif (first == "") and (element not in "+-01234567890"):
-                    return "error"  # mb custom exp?
+                    raise NotValidFirstSymbol  #custom exp
 
                 elif (element in nums) and (operator == ""):
                     first += element
@@ -32,9 +41,12 @@ class SimpleCalculator:
                 elif (element in nums) and (operator != ""):
                     second += element
                 elif (element in operators) and (operator != ""):
-                    first = op[operator](float(first), float(second))
-                    second = ""
-                    operator = element
+                    try:
+                        first = op[operator](float(first), float(second))
+                        second = ""
+                        operator = element
+                    except:
+                        raise NotValidOperators
 
             if (operator == "") and (second == ""):  # make end
                 if first[0] == "+":
@@ -44,7 +56,13 @@ class SimpleCalculator:
             else:
                 first = op[operator](float(first), float(second))
 
+
+
             return first
 
-        except:
-            return "error"
+        except NotValidFirstSymbol:
+            return "error 1"
+        except NotValidOperators:
+            return "error 2"
+        except Exception:
+            return "error 3"
