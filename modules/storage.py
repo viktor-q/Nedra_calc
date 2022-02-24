@@ -13,6 +13,8 @@ class NotValidStatus(Error):
 
 
 class StorageInJson:
+    open('storage.json', 'x')
+
     def add_log_to_json(self, request, response):
         if response != "error":
             data_to_add = {"request": request, "response": response, "status": "success"}
@@ -66,5 +68,3 @@ class StorageInJson:
             return data
 
 
-# {"request": "0.01 - 6 * 2", "response": "-11.980", "status": "success"}
-# {"request": "5 + - 4", "response": "", "status": "fail"}

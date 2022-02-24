@@ -1,12 +1,12 @@
-from typing import Optional, List, Dict
+from typing import Optional, List
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Request, HTTPException, status
-from fastapi.responses import UJSONResponse
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel
 
 import modules.storage
 import modules.simple_calc
+
 
 app = FastAPI()
 

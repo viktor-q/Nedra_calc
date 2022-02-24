@@ -57,9 +57,3 @@ def test_long_formula():
     assert result == "-1.5"
 
 
-# from modules import logger
-# newclass = logger.Logger()
-#
-# # newclass.add_log_to_json("5+5", "10")
-# result = newclass.read_log_from_json(2, None)
-# print(result)
