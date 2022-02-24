@@ -9,6 +9,9 @@ class NotValidFirstSymbol(Error):
 class NotValidOperators(Error):
     pass
 
+class NotIdentifiedErrorInCalc(Error):
+    pass
+
 
 class SimpleCalculator:
     @round_up
@@ -59,11 +62,11 @@ class SimpleCalculator:
             return first
 
         except NotValidFirstSymbol:
-            return "error"
+            raise NotValidFirstSymbol
         except NotValidOperators:
-            return "error"
+            raise NotValidOperators
         except Exception:
-            return "error"
+            raise NotIdentifiedErrorInCalc
 
 
 

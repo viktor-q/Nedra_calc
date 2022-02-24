@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Optional, List, Dict
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, HTTPException, status
 from fastapi.responses import UJSONResponse
 from pydantic import BaseModel, Field
 
@@ -27,13 +27,25 @@ class CalcResponseDTO(BaseModel):
 
 @app.post("/calc", response_model=CalcResponseDTO)
 async def calculation(pushed_data: CalcRequestDTO):
-    calculator = modules.simple_calc.SimpleCalculator()
-    result = calculator.calculation_from_string(pushed_data.input_data)
+    storager = modules.storage.StorageInJson()
+    try:
+        calculator = modules.simple_calc.SimpleCalculator()
+        result = calculator.calculation_from_string(pushed_data.input_data)
 
-    logger = modules.storage.StorageInJson()
-    logger.add_log_to_json(pushed_data.input_data, result)
+        storager = modules.storage.StorageInJson()
+        storager.add_log_to_json(pushed_data.input_data, result)
 
-    return {"output_data": result}
+        return {"output_data": result}
+
+    except modules.simple_calc.NotValidFirstSymbol:
+        storager.add_log_to_json(pushed_data.input_data, "error")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not Valid First Symbol")
+    except modules.simple_calc.NotValidOperators:
+        storager.add_log_to_json(pushed_data.input_data, "error")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not Valid Operators")
+    except modules.simple_calc.NotIdentifiedErrorInCalc:
+        storager.add_log_to_json(pushed_data.input_data, "error")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not Identified Error In Module Calc")
 
 
 class HistoryRequestDTO(BaseModel):
@@ -45,19 +57,25 @@ class HistoryRequestDTO(BaseModel):
 
 
 class HistoryResponseDTO(BaseModel):
-    output_data: list
+    request: str
+    response: str
+    status: str
 
-    # class Config:
-    #     orm_mode = True
-    #     schema_extra = {"example": {"output_data": {"request": "0.01 - 6 * 2", "response": "-11.980", "status": "success"}}}
+    class Config:
+        orm_mode = True
+        schema_extra = {"example": [{"request": "0.01 - 6 * 2", "response": "-11.980", "status": "success"}]}
 
 
-@app.post("/history", response_model=HistoryResponseDTO)
+@app.post("/history", response_model=List[HistoryResponseDTO])
 async def history(pushed_data: HistoryRequestDTO):
-
-    logs = modules.storage.StorageInJson()
-    result_logs = logs.read_log_from_json(pushed_data.limit, pushed_data.status)
-    return {"output_data": result_logs}
+    try:
+        logs = modules.storage.StorageInJson()
+        result_history = logs.read_log_from_json(pushed_data.limit, pushed_data.status)
+        return result_history
+    except modules.storage.NotValidLimit:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not Valid Limit")
+    except modules.storage.NotValidStatus:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not Valid Status")
 
 
 if __name__ == "__main__":
